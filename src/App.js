@@ -47,7 +47,7 @@ class App extends React.Component {
   render() {
     console.log("this is state", this.state);
     return (
-      <div>
+      <div className="App">
         <h1>Google Book Search</h1>
         <SearchForm
           onChangeHandle={(e) => this.onChangeHandler(e)}

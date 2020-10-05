@@ -19,7 +19,7 @@ export default function Card(props) {
     );
 
   return (
-    <>
+    <div style={{ border: "1px solid black", marginTop: "5%" }}>
       <h3>{info.volumeInfo.title}</h3>
       <img alt="Book Cover" src={info.volumeInfo.imageLinks.thumbnail}></img>
       <div>
@@ -27,6 +27,6 @@ export default function Card(props) {
         {price}
         {info.volumeInfo.description}
       </div>
-    </>
+    </div>
   );
 }
