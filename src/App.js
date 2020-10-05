@@ -11,13 +11,15 @@ class App extends React.Component {
     books: [],
     loading: false,
     error: null,
+    printType: "all",
+    filter: "partial",
   };
 
   fetchApi(e) {
     e.preventDefault();
     this.setState({ loading: true });
     fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${this.state.search}&key=${apiKey}`
+      `https://www.googleapis.com/books/v1/volumes?q=${this.state.search}&filter=${this.state.filter}&printType=${this.state.printType}&key=${apiKey}`
     )
       .then((response) =>
         response.ok ? response.json() : Promise.reject("Something went wrong")
@@ -27,7 +29,6 @@ class App extends React.Component {
         this.setState({
           books: items,
           loading: false,
-          search: "",
         })
       )
       .catch((error) => this.setState({ error, loading: false }));
@@ -36,15 +37,23 @@ class App extends React.Component {
   onChangeHandler(e) {
     this.setState({ search: e.target.value });
   }
+  onPrintTypeChangeHandler(e) {
+    this.setState({ printType: e.target.value });
+  }
+  onFilterChangeHandler(e) {
+    this.setState({ filter: e.target.value });
+  }
 
   render() {
-    console.log(this.state);
+    console.log("this is state", this.state);
     return (
       <div>
         <h1>Google Book Search</h1>
         <SearchForm
           onChangeHandle={(e) => this.onChangeHandler(e)}
           onSubmitHandler={(e) => this.fetchApi(e)}
+          printTypeChange={(e) => this.onPrintTypeChangeHandler(e)}
+          filterChange={(e) => this.onFilterChangeHandler(e)}
         />
         <Cardlist books={this.state.books} />
       </div>

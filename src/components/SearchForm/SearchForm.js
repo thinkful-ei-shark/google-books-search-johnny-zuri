@@ -1,4 +1,5 @@
 import React from "react";
+import Filter from "./Filter";
 
 // list price -> saleInfo/listPrice.amount
 // ebook -> saleInfo.isEbook
@@ -17,14 +18,10 @@ export default function SearchForm(props) {
         />
         <input type="submit" />
       </form>
-      <select className="printType">
-        <option>Book</option>
-        <option>eBook</option>
-      </select>
-      <select className="bookType">
-        <option>Free</option>
-        <option>Paid</option>
-      </select>
+      <Filter
+        printTypeChange={props.printTypeChange}
+        filterChange={props.filterChange}
+      />
     </div>
   );
 }
