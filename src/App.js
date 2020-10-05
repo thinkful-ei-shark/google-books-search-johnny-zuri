@@ -46,7 +46,7 @@ class App extends React.Component {
           onChangeHandle={(e) => this.onChangeHandler(e)}
           onSubmitHandler={(e) => this.fetchApi(e)}
         />
-        <Cardlist />
+        <Cardlist books={this.state.books} />
       </div>
     );
   }
