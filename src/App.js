@@ -1,63 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import SearchForm from "./components/SearchForm/SearchForm";
 import Cardlist from "./components/CardList/CardList";
 
-const apiKey = "AIzaSyDVWGglThk31c86Ty0NCsZgSLTrA0HsTGs";
+export function App() {
+  const [search, setSearch] = useState("");
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [printType, setPrintType] = useState("all");
+  const [filter, setFilter] = useState("partial");
 
-class App extends React.Component {
-  state = {
-    search: "",
-    books: [],
-    loading: false,
-    error: null,
-    printType: "all",
-    filter: "partial",
-  };
-
-  fetchApi(e) {
+  const fetchApi = (e) => {
     e.preventDefault();
-    this.setState({ loading: true });
+    setLoading(true);
     fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${this.state.search}&filter=${this.state.filter}&printType=${this.state.printType}&key=${apiKey}`
+      `https://www.googleapis.com/books/v1/volumes?q=${search}&filter=${filter}&printType=${printType}&key=AIzaSyDVWGglThk31c86Ty0NCsZgSLTrA0HsTGs`
     )
       .then((response) =>
         response.ok ? response.json() : Promise.reject("Something went wrong")
       )
       .then((dataJson) => dataJson.items)
-      .then((items) =>
-        this.setState({
-          books: items,
-          loading: false,
-        })
-      )
-      .catch((error) => this.setState({ error, loading: false }));
-  }
+      .then((items) => {
+        setBooks(items);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        console.log(error);
+        setLoading(false);
+      });
+  };
 
-  onChangeHandler(e) {
-    this.setState({ search: e.target.value });
-  }
-  onPrintTypeChangeHandler(e) {
-    this.setState({ printType: e.target.value });
-  }
-  onFilterChangeHandler(e) {
-    this.setState({ filter: e.target.value });
-  }
+  const onChangeHandler = (e) => {
+    setSearch(e.target.value);
+  };
+  const onPrintTypeChangeHandler = (e) => {
+    setPrintType(e.target.value);
+  };
+  const onFilterChangeHandler = (e) => {
+    setFilter(e.target.value);
+  };
 
-  render() {
-    console.log("this is state", this.state);
-    return (
-      <div className="App">
-        <h1>Google Book Search</h1>
-        <SearchForm
-          onChangeHandle={(e) => this.onChangeHandler(e)}
-          onSubmitHandler={(e) => this.fetchApi(e)}
-          printTypeChange={(e) => this.onPrintTypeChangeHandler(e)}
-          filterChange={(e) => this.onFilterChangeHandler(e)}
-        />
-        <Cardlist books={this.state.books} />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <h1>Google Book Search</h1>
+      <SearchForm
+        onChangeHandle={(e) => onChangeHandler(e)}
+        onSubmitHandler={(e) => fetchApi(e)}
+        printTypeChange={(e) => onPrintTypeChangeHandler(e)}
+        filterChange={(e) => onFilterChangeHandler(e)}
+      />
+      <Cardlist books={books} />
+    </div>
+  );
 }
 export default App;
